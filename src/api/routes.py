@@ -12,21 +12,12 @@ api = Blueprint('api', __name__)
 CORS(api)
 
 
-@api.route('/hello', methods=['POST', 'GET'])
-def handle_hello():
-
-    response_body = {
-        "message": "Hello! I'm a message that came from the backend, check the network tab on the google inspector and you will see the GET request"
-    }
-
-    return jsonify(response_body), 200
-
 @api.route('/signup', methods=["POST"])
 def signup():
     data = request.get_json()
 
     if not data.get("email") or not data.get("password"):
-        return jsonify({"msg": "Email and password are required"}), 400
+        return jsonify({"msg": "Email y password son requeridos"}), 400
 
     existing_user = db.session.execute(
         db.select(User).where(User.email == data["email"])
