@@ -11,6 +11,7 @@ from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 
 # Environment and static folder
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -20,6 +21,10 @@ static_file_dir = os.path.join(os.path.dirname(
 # Initialize Flask app
 app = Flask(__name__)
 app.url_map.strict_slashes = False
+
+app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECRET_KEY') 
+jwt = JWTManager(app)
+
 
 # Setup CORS
 CORS(app, resources={r"/api/*": {"origins": "*"}})

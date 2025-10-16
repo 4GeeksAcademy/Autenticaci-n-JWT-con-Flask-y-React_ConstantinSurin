@@ -12,7 +12,7 @@ class User(db.Model):
     is_active: Mapped[bool] = mapped_column(Boolean(), nullable=False, default=True)
 
     def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = generate_password_hash(password).decode('utf-8')
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
