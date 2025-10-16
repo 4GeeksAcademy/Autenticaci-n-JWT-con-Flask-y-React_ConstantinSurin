@@ -1,7 +1,5 @@
-// src/pages/Private.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 
 export default function Profile() {
     const [message, setMessage] = useState("");
@@ -14,20 +12,40 @@ export default function Profile() {
             return;
         }
 
-        axios.get("http://localhost:5000/private", {
-            headers: { Authorization: `Bearer ${token}` }
-        }).then(res => {
-            setMessage(res.data.msg);
-        }).catch(err => {
-            sessionStorage.removeItem("token");
-            navigate("/login");
-        });
+        const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+        fetch(`${backendUrl}api/profile`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        })
+            .then(async (res) => {
+                if (!res.ok) {
+                    throw new Error("No autorizado");
+                }
+                const data = await res.json();
+                setMessage(data.msg);
+            })
+            .catch(() => {
+                sessionStorage.removeItem("token");
+                navigate("/login");
+            });
     }, [navigate]);
 
     return (
-        <div>
+        <div style={{ width: "400px", margin: "50px auto", textAlign: "center" }}>
             <h2>Página Privada</h2>
             <p>{message}</p>
+            <iframe
+                width="600"
+                height="400"
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&controls=1&loop=1&playlist=dQw4w9WgXcQ"
+                title="Never Gonna Give You Up"
+                frameBorder="0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+            ></iframe>
         </div>
     );
 }
